@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\HabilitationController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\TruckController;
 use App\Http\Controllers\Api\TruckDriverHistoryController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,16 +42,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/switch-site', [AuthController::class, 'switchSite']);
 
     // Sites
-    Route::middleware('auth:sanctum')->group(function () {
-        // Sites
-        Route::get('/sites-list', [SiteController::class, 'list']);
-        Route::get('/sites/stats', [SiteController::class, 'stats']);
-        Route::get('/sites/nearby', [SiteController::class, 'nearby']);
-        Route::get('/sites/export', [SiteController::class, 'export']);
-        Route::post('/sites/import', [SiteController::class, 'import']);
-        Route::post('/sites/{site}/toggle-active', [SiteController::class, 'toggleActive']);
-        Route::apiResource('sites', SiteController::class);
-    });
+    Route::get('/sites-list', [SiteController::class, 'list']);
+    Route::get('/sites/stats', [SiteController::class, 'stats']);
+    Route::get('/sites/nearby', [SiteController::class, 'nearby']);
+    Route::get('/sites/export', [SiteController::class, 'export']);
+    Route::post('/sites/import', [SiteController::class, 'import']);
+    Route::post('/sites/{site}/toggle-active', [SiteController::class, 'toggleActive']);
+    Route::apiResource('sites', SiteController::class);
 
     // Emplacements
     Route::get('/locations', [LocationController::class, 'index']);
@@ -69,24 +67,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('parts', PartController::class);
 
     // Work Orders (OT)
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/work-orders/stats', [WorkOrderController::class, 'stats']);
-        Route::post('/work-orders/{workOrder}/status', [WorkOrderController::class, 'updateStatus']);
-        Route::post('/work-orders/{workOrder}/start', [WorkOrderController::class, 'start']);
-        Route::post('/work-orders/{workOrder}/pause', [WorkOrderController::class, 'pause']);
-        Route::post('/work-orders/{workOrder}/resume', [WorkOrderController::class, 'resume']);
-        Route::post('/work-orders/{workOrder}/complete', [WorkOrderController::class, 'complete']);
-        Route::post('/work-orders/{workOrder}/cancel', [WorkOrderController::class, 'cancel']);
-        Route::post('/work-orders/{workOrder}/assign', [WorkOrderController::class, 'assign']);
-        Route::get('/work-orders/{workOrder}/available-parts', [WorkOrderController::class, 'availableParts']);
-        Route::post('/work-orders/{workOrder}/parts', [WorkOrderController::class, 'addPart']);
-        Route::delete('/work-orders/{workOrder}/parts/{part}', [WorkOrderController::class, 'removePart']);
-        Route::post('/work-orders/{workOrder}/comments', [WorkOrderController::class, 'addComment']);
-        Route::get('/equipments/{equipment}/work-orders', [WorkOrderController::class, 'forEquipment']);
-        Route::get('/trucks/{truck}/work-orders', [WorkOrderController::class, 'forTruck']);
-        Route::apiResource('work-orders', WorkOrderController::class);
-    });
-
+    Route::get('/work-orders/stats', [WorkOrderController::class, 'stats']);
+    Route::post('/work-orders/{workOrder}/status', [WorkOrderController::class, 'updateStatus']);
+    Route::post('/work-orders/{workOrder}/start', [WorkOrderController::class, 'start']);
+    Route::post('/work-orders/{workOrder}/pause', [WorkOrderController::class, 'pause']);
+    Route::post('/work-orders/{workOrder}/resume', [WorkOrderController::class, 'resume']);
+    Route::post('/work-orders/{workOrder}/complete', [WorkOrderController::class, 'complete']);
+    Route::post('/work-orders/{workOrder}/cancel', [WorkOrderController::class, 'cancel']);
+    Route::post('/work-orders/{workOrder}/assign', [WorkOrderController::class, 'assign']);
+    Route::get('/work-orders/{workOrder}/available-parts', [WorkOrderController::class, 'availableParts']);
+    Route::post('/work-orders/{workOrder}/parts', [WorkOrderController::class, 'addPart']);
+    Route::delete('/work-orders/{workOrder}/parts/{part}', [WorkOrderController::class, 'removePart']);
+    Route::post('/work-orders/{workOrder}/comments', [WorkOrderController::class, 'addComment']);
+    Route::get('/equipments/{equipment}/work-orders', [WorkOrderController::class, 'forEquipment']);
+    Route::get('/trucks/{truck}/work-orders', [WorkOrderController::class, 'forTruck']);
+    Route::apiResource('work-orders', WorkOrderController::class);
 
     // Users (Utilisateurs)
     Route::get('/roles', [UserController::class, 'getRoles']);
@@ -95,30 +90,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
 
     // Intervention Requests (DI)
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/intervention-requests/stats', [InterventionRequestController::class, 'stats']);
-        Route::post('/intervention-requests/{interventionRequest}/approve', [InterventionRequestController::class, 'approve']);
-        Route::post('/intervention-requests/{interventionRequest}/reject', [InterventionRequestController::class, 'reject']);
-        Route::post('/intervention-requests/{interventionRequest}/validate', [InterventionRequestController::class, 'validate']);
-        Route::post('/intervention-requests/{interventionRequest}/convert', [InterventionRequestController::class, 'convertToWorkOrder']);
-        Route::post('/intervention-requests/{interventionRequest}/cancel', [InterventionRequestController::class, 'cancel']);
-        Route::get('/equipments/{equipment}/intervention-requests', [InterventionRequestController::class, 'forEquipment']);
-        Route::get('/trucks/{truck}/intervention-requests', [InterventionRequestController::class, 'forTruck']);
-        Route::apiResource('intervention-requests', InterventionRequestController::class);
-    });
+    Route::get('/intervention-requests/stats', [InterventionRequestController::class, 'stats']);
+    Route::post('/intervention-requests/{interventionRequest}/approve', [InterventionRequestController::class, 'approve']);
+    Route::post('/intervention-requests/{interventionRequest}/reject', [InterventionRequestController::class, 'reject']);
+    Route::post('/intervention-requests/{interventionRequest}/validate', [InterventionRequestController::class, 'validate']);
+    Route::post('/intervention-requests/{interventionRequest}/convert', [InterventionRequestController::class, 'convertToWorkOrder']);
+    Route::post('/intervention-requests/{interventionRequest}/cancel', [InterventionRequestController::class, 'cancel']);
+    Route::get('/equipments/{equipment}/intervention-requests', [InterventionRequestController::class, 'forEquipment']);
+    Route::get('/trucks/{truck}/intervention-requests', [InterventionRequestController::class, 'forTruck']);
+    Route::apiResource('intervention-requests', InterventionRequestController::class);
 
     // Preventive Maintenance (MP)
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/preventive-maintenances/stats', [PreventiveMaintenanceController::class, 'stats']);
-        Route::get('/preventive-maintenances/calendar', [PreventiveMaintenanceController::class, 'calendar']);
-        Route::get('/preventive-maintenances/upcoming', [PreventiveMaintenanceController::class, 'upcoming']);
-        Route::post('/preventive-maintenances/check-generate', [PreventiveMaintenanceController::class, 'checkAndGenerate']);
-        Route::post('/preventive-maintenances/{preventiveMaintenance}/toggle-active', [PreventiveMaintenanceController::class, 'toggleActive']);
-        Route::post('/preventive-maintenances/{preventiveMaintenance}/generate', [PreventiveMaintenanceController::class, 'generateWorkOrder']);
-        Route::get('/equipments/{equipment}/preventive-maintenances', [PreventiveMaintenanceController::class, 'forEquipment']);
-        Route::get('/trucks/{truck}/preventive-maintenances', [PreventiveMaintenanceController::class, 'forTruck']);
-        Route::apiResource('preventive-maintenances', PreventiveMaintenanceController::class);
-    });
+    Route::get('/preventive-maintenances/stats', [PreventiveMaintenanceController::class, 'stats']);
+    Route::get('/preventive-maintenances/calendar', [PreventiveMaintenanceController::class, 'calendar']);
+    Route::get('/preventive-maintenances/upcoming', [PreventiveMaintenanceController::class, 'upcoming']);
+    Route::post('/preventive-maintenances/check-generate', [PreventiveMaintenanceController::class, 'checkAndGenerate']);
+    Route::post('/preventive-maintenances/{preventiveMaintenance}/toggle-active', [PreventiveMaintenanceController::class, 'toggleActive']);
+    Route::post('/preventive-maintenances/{preventiveMaintenance}/generate', [PreventiveMaintenanceController::class, 'generateWorkOrder']);
+    Route::get('/equipments/{equipment}/preventive-maintenances', [PreventiveMaintenanceController::class, 'forEquipment']);
+    Route::get('/trucks/{truck}/preventive-maintenances', [PreventiveMaintenanceController::class, 'forTruck']);
+    Route::apiResource('preventive-maintenances', PreventiveMaintenanceController::class);
 
     // Génération manuelle des OT préventifs (admin uniquement)
     Route::post('/preventive-maintenances/generate-all', function (Request $request) {

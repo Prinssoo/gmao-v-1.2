@@ -18,7 +18,7 @@ class TruckDriverHistoryController extends Controller
     {
         $query = TruckDriverHistory::where('site_id', $request->user()->current_site_id)
             ->with([
-                'truck:id,code,registration_number,brand,model',
+                'truck:id,code,numero,registration_number,brand,model',
                 'driver:id,code,first_name,last_name',
                 'assignedBy:id,name',
                 'unassignedBy:id,name',
@@ -206,7 +206,7 @@ class TruckDriverHistoryController extends Controller
     {
         $history = TruckDriverHistory::where('driver_id', $driver->id)
             ->with([
-                'truck:id,code,registration_number,brand,model',
+                'truck:id,code,numero,registration_number,brand,model',
                 'assignedBy:id,name',
                 'unassignedBy:id,name',
             ])
@@ -224,7 +224,7 @@ class TruckDriverHistoryController extends Controller
         $assignments = TruckDriverHistory::where('site_id', $request->user()->current_site_id)
             ->whereNull('unassigned_at')
             ->with([
-                'truck:id,code,registration_number,brand,model,mileage',
+                'truck:id,code,numero,registration_number,brand,model,mileage',
                 'driver:id,code,first_name,last_name,phone',
                 'assignedBy:id,name',
             ])
@@ -264,8 +264,8 @@ class TruckDriverHistoryController extends Controller
         // Top camions par utilisation
         $topTrucks = TruckDriverHistory::where('truck_driver_history.site_id', $siteId)
             ->join('trucks', 'truck_driver_history.truck_id', '=', 'trucks.id')
-            ->selectRaw('trucks.id, trucks.code, trucks.registration_number, COUNT(*) as assignments_count')
-            ->groupBy('trucks.id', 'trucks.code', 'trucks.registration_number')
+            ->selectRaw('trucks.id, trucks.code, trucks.numero, trucks.registration_number, COUNT(*) as assignments_count')
+            ->groupBy('trucks.id', 'trucks.code', 'trucks.numero', 'trucks.registration_number')
             ->orderByDesc('assignments_count')
             ->limit(5)
             ->get();
