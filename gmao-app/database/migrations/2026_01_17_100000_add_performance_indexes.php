@@ -37,7 +37,7 @@ return new class extends Migration
         // Index sur preventive_maintenances
         Schema::table('preventive_maintenances', function (Blueprint $table) {
             $table->index(['site_id', 'is_active'], 'pm_site_active_idx');
-            $table->index('next_due_date', 'pm_next_due_idx');
+            $table->index('next_execution_date', 'pm_next_execution_idx');
         });
     }
 
@@ -67,7 +67,7 @@ return new class extends Migration
 
         Schema::table('preventive_maintenances', function (Blueprint $table) {
             $table->dropIndex('pm_site_active_idx');
-            $table->dropIndex('pm_next_due_idx');
+            $table->dropIndex('pm_next_execution_idx');
         });
     }
 };
